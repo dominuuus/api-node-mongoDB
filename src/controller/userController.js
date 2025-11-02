@@ -41,6 +41,26 @@ class UserController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  async getUserByEmail(req, res) {
+    try {
+      const email = req.params.email;
+      const user = await userService.getUserByEmail(email);
+      res.json(user);
+    } catch (error) {
+      res.status(404).json({ error: error.message });
+    }
+  }
+
+  async deleteUser(req, res) {
+    try {
+      const userId = req.params.id;
+      const user = await userService.deleteUser(userId);
+      res.json(user);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
 }
 
 module.exports = new UserController();

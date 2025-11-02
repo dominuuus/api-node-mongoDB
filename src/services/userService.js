@@ -42,6 +42,25 @@ class UserService {
   async getAllUsers() {
     return await User.find().select("-password");
   }
+
+  async getUserByEmail(email) {
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
+
+    return user;
+  }
+
+  async deleteUser(userId) {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { isActive: false },
+      { new: true }
+    );
+    if (!user) throw new Error("Usuário não encontrado");
+    return user;
+  }
 }
 
 module.exports = new UserService();

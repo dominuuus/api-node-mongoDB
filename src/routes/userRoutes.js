@@ -14,5 +14,7 @@ router.put("/profile", userController.updateProfile);
 router.post("/change-password", userController.changePassword);
 
 router.get("/", adminMiddleware, userController.getAllUsers);
+router.get("/email/:email", adminMiddleware, userController.getUserByEmail);
+router.delete("/:id", adminMiddleware, userController.deleteUser);
 
 module.exports = router;
