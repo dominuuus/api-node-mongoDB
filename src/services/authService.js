@@ -2,19 +2,21 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
 class AuthService {
-  async registerUser(name, email, password, birthDate, role = "customer") {
+  async registerUser(name, email, password, birthDate, role, requesterRole) {
+    if (role === "admin" && requesterRole !== "admin") {
+      throw new Error("Apenas administradores podem criar outros administradores");
+    }
+
     const userExists = await User.findOne({ email });
     if (userExists) {
       throw new Error("Email já está em uso");
     }
 
     const user = new User({ name, email, password, birthDate, role });
-
     const savedUser = await user.save();
-
     const token = this.generateToken(user.id, user.role);
 
-    return { user, token };
+    return { user: savedUser, token };
   }
 
   async loginUser(email, password) {

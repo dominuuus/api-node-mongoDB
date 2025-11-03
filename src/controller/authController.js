@@ -4,6 +4,7 @@ class AuthController {
   async register(req, res) {
     try {
       const { name, email, password, birthDate, role } = req.body;
+      const requesterRole = req.user ? req.user.role : "guest";
 
       if (!name || !email || !password || !birthDate) {
         return res
@@ -16,7 +17,8 @@ class AuthController {
         email,
         password,
         birthDate,
-        role
+        role,
+        requesterRole
       );
 
       res.status(201).json({
@@ -30,7 +32,8 @@ class AuthController {
         token,
       });
     } catch (error) {
-      res.status(400).json({ message: error.message });
+      const status = error.message.includes("administradores") ? 403 : 400;
+      res.status(status).json({ message: error.message });
     }
   }
 
