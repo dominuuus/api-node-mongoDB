@@ -3,7 +3,11 @@
   "info": {
     "title": "Pizzaria API",
     "version": "1.0.0",
-    "description": "API para gerenciamento de uma pizzaria."
+    "description": "API RESTful para gerenciamento completo de um sistema de delivery de pizzas. Inclui autenticação JWT, controle de usuários e permissões, gerenciamento de pizzas, processamento de pedidos e atualização de status em tempo real.",
+    "contact": {
+      "name": "Domingos Santiago",
+      "url": "https://github.com/dominuuus"
+    }
   },
   "servers": [
     {
@@ -38,6 +42,17 @@
                     "format": "password",
                     "minLength": 6,
                     "example": "pizza123"
+                  },
+                  "birthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "minLength": 6,
+                    "example": "2000-01-01"
+                  },
+                  "isActive": {
+                    "type": "boolean",
+                    "format": "boolean",
+                    "example": true
                   },
                   "role": {
                     "type": "string",
@@ -90,11 +105,13 @@
                 "properties": {
                   "email": {
                     "type": "string",
-                    "format": "email"
+                    "format": "email",
+                    "example": "email@example.com"
                   },
                   "password": {
                     "type": "string",
-                    "format": "password"
+                    "format": "password",
+                    "example": "sudyuwiz3##$kyuy392789"
                   }
                 }
               }
@@ -107,15 +124,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "user": {
-                      "$ref": "#/components/schemas/User"
-                    },
-                    "token": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/LoginResponse"
                 }
               }
             }
@@ -132,7 +141,7 @@
         "tags": ["Pedidos"],
         "security": [
           {
-            "bearerAuth": []
+            "bearerAuth": ["admin"]
           }
         ],
         "requestBody": {
@@ -182,6 +191,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Erro ao recuperar os pedidos do usuário"
           }
         }
       }
@@ -218,7 +230,7 @@
             }
           },
           "404": {
-            "description": "Pedido não encontrado"
+            "description": "ID do pedido inválido"
           }
         }
       }
@@ -229,7 +241,7 @@
         "tags": ["Pedidos"],
         "security": [
           {
-            "bearerAuth": []
+            "bearerAuth": ["admin"]
           }
         ],
         "responses": {
@@ -247,7 +259,7 @@
             }
           },
           "403": {
-            "description": "Apenas administradores"
+            "description": "Não autorizado. Apenas administradores"
           }
         }
       }
@@ -258,7 +270,7 @@
         "tags": ["Pedidos"],
         "security": [
           {
-            "bearerAuth": []
+            "bearerAuth": ["admin"]
           }
         ],
         "parameters": [
@@ -288,7 +300,8 @@
                       "saiu_para_entrega",
                       "entregue",
                       "cancelado"
-                    ]
+                    ],
+                    "example": "preparando"
                   }
                 }
               }
@@ -310,7 +323,7 @@
             "description": "Status inválido"
           },
           "403": {
-            "description": "Apenas administradores"
+            "description": "Não autorizado. Apenas administradores"
           }
         }
       }
@@ -321,7 +334,7 @@
         "tags": ["Pizzas"],
         "security": [
           {
-            "bearerAuth": []
+            "bearerAuth": ["admin"]
           }
         ],
         "requestBody": {
@@ -329,7 +342,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Pizza"
+                "$ref": "#/components/schemas/CreateAndUpdatePizza"
               }
             }
           }
@@ -346,7 +359,7 @@
             }
           },
           "403": {
-            "description": "Apenas administradores"
+            "description": "Não autorizado. Apenas administradores"
           },
           "400": {
             "description": "Dados inválidos"
@@ -356,6 +369,11 @@
       "get": {
         "summary": "Listar todas as pizzas disponíveis",
         "tags": ["Pizzas"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Lista de pizzas",
@@ -369,6 +387,9 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Erro ao recuperar dados"
           }
         }
       }
@@ -377,6 +398,11 @@
       "get": {
         "summary": "Buscar pizza por ID",
         "tags": ["Pizzas"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "in": "path",
@@ -409,7 +435,7 @@
         "tags": ["Pizzas"],
         "security": [
           {
-            "bearerAuth": []
+            "bearerAuth": ["admin"]
           }
         ],
         "parameters": [
@@ -428,7 +454,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Pizza"
+                "$ref": "#/components/schemas/CreateAndUpdatePizza"
               }
             }
           }
@@ -448,7 +474,7 @@
             "description": "Pizza não encontrada"
           },
           "403": {
-            "description": "Apenas administradores"
+            "description": "Não autorizado. Apenas administradores"
           }
         }
       },
@@ -457,7 +483,7 @@
         "tags": ["Pizzas"],
         "security": [
           {
-            "bearerAuth": []
+            "bearerAuth": ["admin"]
           }
         ],
         "parameters": [
@@ -492,7 +518,7 @@
             "description": "Pizza não encontrada"
           },
           "403": {
-            "description": "Apenas administradores"
+            "description": "Não autorizado. Apenas administradores"
           }
         }
       }
@@ -549,9 +575,6 @@
           },
           "400": {
             "description": "Senha atual incorreta"
-          },
-          "401": {
-            "description": "Não autorizado"
           }
         }
       }
@@ -576,13 +599,13 @@
               }
             }
           },
-          "401": {
-            "description": "Não autorizado"
+          "404": {
+            "description": "Perfil não encontrado"
           }
         }
       },
       "put": {
-        "summary": "Atualizar perfil (nome, email)",
+        "summary": "Atualizar perfil (nome, email, data de nascimento)",
         "tags": ["Usuários"],
         "security": [
           {
@@ -604,6 +627,11 @@
                     "type": "string",
                     "format": "email",
                     "example": "novoemail@example.com"
+                  },
+                  "birthDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "1991-12-12"
                   }
                 }
               }
@@ -624,8 +652,8 @@
           "400": {
             "description": "Erro de validação"
           },
-          "401": {
-            "description": "Não autorizado"
+          "404": {
+            "description": "Não localizado"
           }
         }
       }
@@ -637,7 +665,18 @@
         "tags": ["Usuários"],
         "security": [
           {
-            "bearerAuth": []
+            "bearerAuth": ["admin"]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Email do usuário"
           }
         ],
         "responses": {
@@ -651,8 +690,8 @@
               }
             }
           },
-          "401": {
-            "description": "Não autorizado"
+          "404": {
+            "description": "Não localizado"
           }
         }
       }
@@ -664,7 +703,7 @@
         "tags": ["Usuários"],
         "security": [
           {
-            "bearerAuth": []
+            "bearerAuth": ["admin"]
           }
         ],
         "responses": {
@@ -682,21 +721,32 @@
             }
           },
           "403": {
-            "description": "Apenas administradores"
+            "description": "Não autorizado. Apenas administradores"
           },
-          "401": {
-            "description": "Não autorizado"
+          "500": {
+            "description": "Erro ao recuperar dados dos usuários"
           }
         }
       }
     },
     "/api/users/delete/{id}": {
       "delete": {
-        "summary": "Deletar usuário por ID (apenas admin)",
+        "summary": "Deletar usuário por ID (soft delete - apenas admin)",
         "tags": ["Usuários"],
         "security": [
           {
-            "bearerAuth": []
+            "bearerAuth": ["admin"]
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID do usuário"
           }
         ],
         "responses": {
@@ -705,13 +755,22 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Usuário removido com sucesso"
+                    }
+                  }
                 }
               }
             }
           },
-          "401": {
-            "description": "Não autorizado"
+          "400": {
+            "description": "Erro ao deletar usuário"
+          },
+          "403": {
+            "description": "Não autorizado. Apenas administradores"
           }
         }
       }
@@ -728,6 +787,7 @@
     "schemas": {
       "User": {
         "type": "object",
+        "required": ["name", "email", "birthDate"],
         "properties": {
           "_id": {
             "type": "string",
@@ -742,10 +802,20 @@
             "format": "email",
             "example": "joao@example.com"
           },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2000-01-01"
+          },
           "role": {
             "type": "string",
             "enum": ["customer", "admin"],
             "example": "customer"
+          },
+          "isActive": {
+            "type": "boolean",
+            "format": "boolean",
+            "example": true
           },
           "createdAt": {
             "type": "string",
@@ -753,47 +823,146 @@
           }
         }
       },
-      "Pizza": {
+      "LoginResponse": {
         "type": "object",
         "properties": {
-          "_id": {
-            "type": "string"
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "João Silva"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "example": "joao@example.com"
+              }
+            }
           },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIs..."
+          }
+        }
+      },
+      "Pizza": {
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "price",
+          "size",
+          "ingredients",
+          "available"
+        ],
+        "properties": {
           "name": {
             "type": "string",
-            "example": "Margherita"
+            "example": "Margherita Premium"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "example": "Clássica italiana com molho de tomate San Marzano, muçarela de búfala fresca, manjericão orgânico e azeite extra virgem"
           },
           "price": {
             "type": "number",
-            "example": 35.9
+            "minimum": 0,
+            "example": 52.9
           },
           "size": {
             "type": "string",
-            "enum": ["pequena", "media", "grande", "familia"]
+            "enum": ["Pequena", "Média", "Grande", "Família"],
+            "example": "Média"
           },
           "ingredients": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "example": [
+                "molho de tomate san marzano",
+                "muçarela de búfala",
+                "manjericão fresco",
+                "azeite extra virgem"
+              ]
             }
-          },
-          "imageUrl": {
-            "type": "string"
           },
           "available": {
             "type": "boolean",
             "default": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "https://exemplo.com/pizzas/margherita-premium.jpg"
+          },
+          "_id": {
+            "type": "string",
+            "example": "6907ba398205e7c9b6ed4845"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-11-02T20:08:25.450Z"
+          }
+        }
+      },
+      "CreateAndUpdatePizza": {
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "price",
+          "size",
+          "ingredients",
+          "available"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Margherita Premium"
+          },
+          "description": {
+            "type": "string",
+            "example": "Clássica italiana com molho de tomate San Marzano, muçarela de búfala fresca, manjericão orgânico e azeite extra virgem"
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0,
+            "example": 52.9
+          },
+          "size": {
+            "type": "string",
+            "enum": ["Pequena", "Média", "Grande", "Família"],
+            "example": "Média"
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": [
+                "molho de tomate san marzano",
+                "muçarela de búfala",
+                "manjericão fresco",
+                "azeite extra virgem"
+              ]
+            }
+          },
+          "available": {
+            "type": "boolean",
+            "default": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "https://exemplo.com/pizzas/margherita-premium.jpg"
           }
         }
       },
       "Order": {
         "type": "object",
+        "required": ["user", "items", "total", "paymentMethod", "address"],
         "properties": {
           "_id": {
-            "type": "string"
+            "type": "string",
+            "example": "6907be135425e32d674313e6"
           },
           "user": {
             "$ref": "#/components/schemas/User"
@@ -807,10 +976,14 @@
                   "$ref": "#/components/schemas/Pizza"
                 },
                 "quantity": {
-                  "type": "integer"
+                  "type": "integer",
+                  "minimum": 1,
+                  "example": 2
                 },
                 "price": {
-                  "type": "number"
+                  "type": "number",
+                  "minimum": 0,
+                  "example": 52.8
                 }
               }
             }
@@ -831,16 +1004,57 @@
             "default": "pendente"
           },
           "address": {
-            "type": "object"
+            "type": "object",
+            "$ref": "#/components/schemas/Address"
           },
           "paymentMethod": {
-            "type": "string"
+            "type": "object",
+            "$ref": "#/components/schemas/PaymentMethod"
           },
           "createdAt": {
             "type": "string",
             "format": "date-time"
           }
         }
+      },
+      "Address": {
+        "type": "object",
+        "required": ["street", "number", "city", "zipCode"],
+        "properties": {
+          "street": {
+            "type": "string",
+            "example": "Ruas das Flores"
+          },
+          "number": {
+            "type": "number",
+            "example": 22
+          },
+          "complement": {
+            "type": "string",
+            "example": "Apt 304"
+          },
+          "neighborhood": {
+            "type": "String",
+            "example": "Moca"
+          },
+          "city": {
+            "type": "String",
+            "example": "São Paulo"
+          },
+          "state": {
+            "type": "string",
+            "example": "SP"
+          },
+          "zipCode": {
+            "type": "string",
+            "example": "01400-552"
+          }
+        }
+      },
+      "PaymentMethod": {
+        "type": "string",
+        "enum": ["dinheiro", "cartao_credito", "cartao_debito", "pix"],
+        "example": "pix"
       }
     }
   },
