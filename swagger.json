@@ -3,7 +3,7 @@
   "info": {
     "title": "Pizzaria API",
     "version": "1.0.0",
-    "description": "API RESTful para gerenciamento completo de um sistema de delivery de pizzas. Inclui autenticação JWT, controle de usuários e permissões, gerenciamento de pizzas, processamento de pedidos e atualização de status em tempo real.",
+    "description": "API RESTful para gerenciamento de um sistema de delivery de pizzas. Inclui autenticação JWT, controle de usuários e permissões, gerenciamento de pizzas, processamento de pedidos e atualização de status em tempo real.",
     "contact": {
       "name": "Domingos Santiago",
       "url": "https://github.com/dominuuus"
