@@ -10,7 +10,7 @@ class OrderController {
 
       res.status(201).json(order);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ message: "Erro ao criar o pedido" });
     }
   }
 
@@ -20,7 +20,7 @@ class OrderController {
       const orders = await orderService.getOrdersByUser(userId);
       res.status(200).json(orders);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ message: "Erro ao recuperar os pedidos do usuário" });
     }
   }
 
@@ -29,7 +29,7 @@ class OrderController {
       const orders = await orderService.getAllOrders();
       res.status(200).json(orders);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ message: "Erro ao recuperar os pedidos" });
     }
   }
 
@@ -41,7 +41,7 @@ class OrderController {
       const order = await orderService.getOrderById(userId, orderId);
       res.status(200).json(order);
     } catch (error) {
-      res.status(404).json({ error: error.message });
+      res.status(404).json({ message: "Erro ao recuperar o pedido. Verifique o ID" });
     }
   }
 
@@ -53,7 +53,7 @@ class OrderController {
       const order = await orderService.updateOrderStatus(orderId, status);
       res.status(200).json(order);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ message: "Erro ao atualizar os dados do pedido" });
     }
   }
 }

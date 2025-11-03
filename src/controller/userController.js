@@ -6,7 +6,7 @@ class UserController {
       const user = await userService.getUserById(req.user._id);
       res.json(user);
     } catch (error) {
-      res.status(404).json({ error: error.message });
+      res.status(404).json({ message: "Perfil não encontrado" });
     }
   }
 
@@ -15,7 +15,7 @@ class UserController {
       const user = await userService.updateProfile(req.user._id, req.body);
       res.json(user);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ message: "Erro ao utilizar perfil do usuário" });
     }
   }
 
@@ -29,7 +29,7 @@ class UserController {
       );
       res.json(result);
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ message: "Erro. Senha não atualizada" });
     }
   }
 
@@ -38,7 +38,7 @@ class UserController {
       const users = await userService.getAllUsers();
       res.json(users);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ message: "Erro inesperado. Não foi possível recuperar a lista de usuários" });
     }
   }
 
@@ -48,7 +48,7 @@ class UserController {
       const user = await userService.getUserByEmail(email);
       res.json(user);
     } catch (error) {
-      res.status(404).json({ error: error.message });
+      res.status(404).json({ message: "Erro. Usuário não localizado" });
     }
   }
 
@@ -56,9 +56,9 @@ class UserController {
     try {
       const userId = req.params.id;
       const user = await userService.deleteUser(userId);
-      res.json(user);
+      res.status(200).json({ message: "Usuário removido com sucesso" });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ message: "Erro. Não foi possível remover o usuário" });
     }
   }
 }
