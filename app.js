@@ -1,12 +1,19 @@
 require("dotenv").config();
 const express = require("express");
 const connectToDatabase = require("./src/config/database");
+const cors = require("cors");
 
 const app = express();
 
 connectToDatabase();
 
 app.use(express.json());
+app.use(
+  cors({
+    origin: [""],
+    methods: ["POST", "GET", "PUT", "PATCH", "DELETE"],
+  })
+);
 
 app.use("/api/auth", require("./src/routes/authRoutes"));
 app.use("/api/pizzas", require("./src/routes/pizzaRoutes"));
