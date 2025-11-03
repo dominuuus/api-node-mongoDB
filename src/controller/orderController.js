@@ -6,7 +6,12 @@ class OrderController {
       const userId = req.user._id;
       const { items, address, paymentMethod } = req.body;
 
-      const order = await orderService.createOrder(userId, items, address, paymentMethod);
+      const order = await orderService.createOrder(
+        userId,
+        items,
+        address,
+        paymentMethod
+      );
 
       res.status(201).json(order);
     } catch (error) {
@@ -20,7 +25,9 @@ class OrderController {
       const orders = await orderService.getOrdersByUser(userId);
       res.status(200).json(orders);
     } catch (error) {
-      res.status(500).json({ message: "Erro ao recuperar os pedidos do usuário" });
+      res
+        .status(500)
+        .json({ message: "Erro ao recuperar os pedidos do usuário" });
     }
   }
 
@@ -41,7 +48,9 @@ class OrderController {
       const order = await orderService.getOrderById(userId, orderId);
       res.status(200).json(order);
     } catch (error) {
-      res.status(404).json({ message: "Erro ao recuperar o pedido. Verifique o ID" });
+      res
+        .status(404)
+        .json({ message: "Erro ao recuperar o pedido. Verifique o ID" });
     }
   }
 

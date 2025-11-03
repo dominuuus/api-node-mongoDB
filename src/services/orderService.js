@@ -75,25 +75,32 @@ class OrderService {
   async getAllOrders() {
     return await Order.find()
       .sort({ createdAt: -1 })
-      .populate('user', 'name email')
-      .populate('items.pizza', 'name price imageUrl');
+      .populate("user", "name email")
+      .populate("items.pizza", "name price imageUrl");
   }
 
   async updateOrderStatus(orderId, status) {
-    const allowedStatuses = ['pendente', 'preparando', 'saiu_para_entrega', 'entregue', 'cancelado'];
-    
+    const allowedStatuses = [
+      "pendente",
+      "preparando",
+      "saiu_para_entrega",
+      "entregue",
+      "cancelado",
+    ];
+
     if (!allowedStatuses.includes(status)) {
-      throw new Error('Status inválido. Use: ' + allowedStatuses.join(', '));
+      throw new Error("Status inválido. Use: " + allowedStatuses.join(", "));
     }
 
     const order = await Order.findByIdAndUpdate(
       orderId,
       { status },
       { new: true, runValidators: true }
-    ).populate('user', 'name email')
-     .populate('items.pizza', 'name price imageUrl');
+    )
+      .populate("user", "name email")
+      .populate("items.pizza", "name price imageUrl");
 
-    if (!order) throw new Error('Pedido não encontrado');
+    if (!order) throw new Error("Pedido não encontrado");
 
     return order;
   }

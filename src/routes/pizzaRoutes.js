@@ -10,7 +10,6 @@ router.get("/", authMiddleware, pizzaController.getAll);
 router.get("/", authMiddleware, pizzaController.getById);
 router.get("/:id", authMiddleware, pizzaController.getById);
 
-
 router.post("/", adminMiddleware, pizzaController.create);
 router.put("/:id", adminMiddleware, pizzaController.update);
 router.delete("/:id", adminMiddleware, pizzaController.delete);

@@ -38,7 +38,12 @@ class UserController {
       const users = await userService.getAllUsers();
       res.json(users);
     } catch (error) {
-      res.status(500).json({ message: "Erro inesperado. Não foi possível recuperar a lista de usuários" });
+      res
+        .status(500)
+        .json({
+          message:
+            "Erro inesperado. Não foi possível recuperar a lista de usuários",
+        });
     }
   }
 
@@ -58,7 +63,9 @@ class UserController {
       const user = await userService.deleteUser(userId);
       res.status(200).json({ message: "Usuário removido com sucesso" });
     } catch (error) {
-      res.status(400).json({ message: "Erro. Não foi possível remover o usuário" });
+      res
+        .status(400)
+        .json({ message: "Erro. Não foi possível remover o usuário" });
     }
   }
 }

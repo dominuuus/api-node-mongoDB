@@ -4,7 +4,9 @@ const jwt = require("jsonwebtoken");
 class AuthService {
   async registerUser(name, email, password, birthDate, role, requesterRole) {
     if (role === "admin" && requesterRole !== "admin") {
-      throw new Error("Apenas administradores podem criar outros administradores");
+      throw new Error(
+        "Apenas administradores podem criar outros administradores"
+      );
     }
 
     const userExists = await User.findOne({ email });

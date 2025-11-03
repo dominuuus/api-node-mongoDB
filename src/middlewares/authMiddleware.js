@@ -10,7 +10,6 @@ const authMiddleware = async (req, res, next) => {
     return next();
   }
 
-
   try {
     const authHeader = req.header("Authorization");
     const token = authHeader && authHeader.replace("Bearer ", "");
